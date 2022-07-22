@@ -1,7 +1,0 @@
-{"level":"error","message":"Hello distributed log files 1!"}
-{"level":"error"}
-{"level":"error"}
-{"level":"error","message":1}
-{"level":"error","message":1}
-{"level":"error","message":1}
-2022-07-20T16:09:06.851Z [right meow!] error: test
