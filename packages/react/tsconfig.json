@@ -1,0 +1,24 @@
+{
+  "exclude": ["node_modules"],
+  "include": ["./src/**/*"],
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "react",
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./src",
+    "paths": {
+      "*": ["*", "../tests/*"]
+    },
+    "preserveWatchOutput": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist/types",
+    "declarationMap": true
+  }
+}
