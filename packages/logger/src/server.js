@@ -2,6 +2,7 @@ import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import Router from 'koa-router';
 import winston from 'winston';
+import cors from '@koa/cors';
 import 'winston-daily-rotate-file';
 
 const { format, createLogger } = winston;
@@ -10,6 +11,7 @@ const app = new Koa();
 
 var router = new Router();
 app.use(bodyParser());
+app.use(cors());
 
 const myFormat = printf(({ level, message, label, timestamp }) => {
   return `${timestamp} [${label}] ${level}: ${message}`;
@@ -73,7 +75,6 @@ router
     ctx.body = { message: 'ok', status: 0 };
   })
   .post('/log/query', (ctx, next) => {
-    console.log(ctx.request.body);
     const { privateKey, ...rest } = ctx.request.body;
 
     if (privateKey !== 'roc') {
