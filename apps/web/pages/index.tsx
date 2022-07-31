@@ -7,7 +7,11 @@ const logger = new Logger({
 
 export default function Web() {
   function log() {
-    logger.log({ level: 'error', message: Math.random() })
+    logger.info({ message: Math.random() })
+  }
+
+  function error() {
+    logger.error([{ message: Math.random(), from: 'roc' }])
   }
 
   return (
@@ -15,6 +19,7 @@ export default function Web() {
       <h1>Web</h1>
 
       <button onClick={log}>LOG</button>
+      <button onClick={error}>ERROR</button>
       <Button />
     </div>
   );

@@ -5,7 +5,8 @@ export declare class Logger {
     private url;
     constructor(options: LoggerOptions);
     postData(data?: {}): Promise<any>;
-    log(info: any): void;
+    error(message: any): void;
+    info(message: any): void;
 }
 export {};
 //# sourceMappingURL=index.d.ts.map

@@ -69,7 +69,7 @@ router
 
     logger.log({
       level,
-      message,
+      message: JSON.stringify(message),
     });
 
     ctx.body = { message: 'ok', status: 0 };

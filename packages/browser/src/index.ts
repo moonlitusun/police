@@ -26,8 +26,12 @@ export class Logger {
     return response.json();
   }
 
-  log(info) {
-    this.postData(info)
+  error(message: any) {
+    this.postData({ level: 'error', message })
+  }
+
+  info(message: any) {
+    this.postData({ level: 'info', message })
       .then((res) => {
         console.log(res, '<-- res');
       })

@@ -2232,8 +2232,18 @@ class Logger {
     })();
   }
 
-  log(info) {
-    this.postData(info).then(res => {
+  error(message) {
+    this.postData({
+      level: 'error',
+      message
+    });
+  }
+
+  info(message) {
+    this.postData({
+      level: 'info',
+      message
+    }).then(res => {
       console.log(res, '<-- res');
     }).catch(err => {
       console.log(err, '<-- error');
