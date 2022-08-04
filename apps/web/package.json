@@ -13,7 +13,8 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "ui": "workspace:*",
-    "@dz-web-police/browser": "workspace:*"
+    "@dz-web-police/browser": "workspace:*",
+    "@dz-web-police/react": "workspace:*"
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",

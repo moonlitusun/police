@@ -43,10 +43,11 @@
     "typescript": "^4.6.4"
   },
   "dependencies": {
-    "lodash-es": "^4.17.21"
+    "@dz-web-police/browser": "workspace:*",
+    "lodash-es": "^4.17.21",
+    "react-error-boundary": "^3.1.4"
   },
   "peerDependencies": {
-    "@dz-web/quote-client": "*",
     "react": "^16.8.0"
   }
 }

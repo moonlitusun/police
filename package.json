@@ -11,7 +11,8 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "dev:browser": "turbo run dev --parallel --filter=browser --filter=web"
+    "dev:browser": "turbo run dev --parallel --filter=browser --filter=web",
+    "dev:react": "turbo run dev --parallel --filter=browser --filter=react --filter=web"
   },
   "devDependencies": {
     "eslint-config-custom": "workspace:*",

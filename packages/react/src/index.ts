@@ -1,7 +1,5 @@
-export { default as QuoteClientContext } from './components/context';
-export { default as QuoteClientProvider } from './components/provider';
+import {ErrorBoundary} from 'react-error-boundary'
 
-export { useQuoteClient } from './hooks/use-quote-client';
-export { useSubscribeStockListQuote } from './hooks/use-subscribe-stock-list-quote';
-export { useSubscribeSingleStockQuote } from './hooks/use-subscribe-single-stock-quote';
-export { useSubscribeBrokerQueue } from './hooks/use-subscribe-broker-queue';
+export function a() {
+  return ErrorBoundary;
+}
