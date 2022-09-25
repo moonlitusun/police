@@ -1,5 +1,5 @@
 {
-  "name": "@dz-web-police/browser",
+  "name": "@dz-web/police-browser",
   "version": "0.0.1",
   "description": "",
   "sideEffects": false,
@@ -44,10 +44,10 @@
     "typescript": "^4.6.4"
   },
   "dependencies": {
+    "@dz-web/police-react": "*",
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
-    "@dz-web/quote-client": "*",
     "react": "^16.8.0"
   }
 }

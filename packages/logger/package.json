@@ -1,5 +1,5 @@
 {
-  "name": "@dz-web-police/logger",
+  "name": "@dz-web/police-logger",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

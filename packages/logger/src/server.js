@@ -14,7 +14,15 @@ app.use(bodyParser());
 app.use(cors());
 
 const myFormat = printf(({ level, message, label, timestamp }) => {
-  return `${timestamp} [${label}] ${level}: ${message}`;
+  let str = `${timestamp} [${label}] ${level}:`;
+
+  for (let key in message) {
+    str += `
+    ${key}: ${message[key]}
+    `
+  }
+
+  return str;
 });
 
 var transportInfo = new winston.transports.DailyRotateFile({
@@ -69,7 +77,7 @@ router
 
     logger.log({
       level,
-      message: JSON.stringify(message),
+      message: message,
     });
 
     ctx.body = { message: 'ok', status: 0 };

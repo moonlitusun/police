@@ -1,5 +1,5 @@
 import { Button } from "ui";
-import { Logger } from '@dz-web-police/browser';
+import { Logger } from '@dz-web/police-browser';
 
 const logger = new Logger({
   url: 'http://192.168.31.136:6001'
