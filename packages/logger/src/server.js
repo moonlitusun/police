@@ -116,4 +116,4 @@ router
 
 app.use(router.routes()).use(router.allowedMethods());
 
-app.listen(6001);
+app.listen(process.env.port || 6001);
