@@ -2,7 +2,7 @@ import { Button } from "ui";
 import { Logger } from '@dz-web/police-browser';
 
 const logger = new Logger({
-  url: 'http://192.168.31.136:6001'
+  url: 'http://localhost:6001'
 });
 
 export default function Web() {

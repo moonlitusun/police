@@ -13,8 +13,6 @@ export class Logger {
     const response = await fetch(`${this.url}/log`, {
       method: "POST",
       mode: "cors",
-      // cache: "no-cache",
-      // credentials: "same-origin",
       headers: {
         "Content-Type": "application/json",
       },

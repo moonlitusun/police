@@ -65,6 +65,7 @@ router
     console.log(ctx.request.body);
     const { message, level } = ctx.request.body;
 
+    console.log(`${level} ${JSON.stringify(message)}`);
     if (!message) {
       ctx.body = { message: '缺少message', status: -1 };
       return;

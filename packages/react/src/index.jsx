@@ -1,10 +1,8 @@
-import React from "react";
+import { useCallback } from 'react';
 import { ErrorBoundary } from "react-error-boundary";
 
-const data = { username: "example" };
-
-function postData(data) {
-  fetch("http://localhost:6001/log", {
+function postData(url, data) {
+  fetch(`${url}/log`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -32,26 +30,27 @@ function ErrorFallback(info) {
   );
 }
 
-const myErrorHandler = (error, info) => {
-  postData({
-    message: { message: error.message, stack: info.componentStack },
-    level: "error",
-  });
-  console.log(typeof error, JSON.stringify(error), info);
-  // Do something with the error
-  // E.g. log to an error logging client here
-};
-
 export function ErrorBoundaryWithLogger(props) {
-  const { children } = props;
+  const { children, url, onError = () => undefined } = props;
+
+  const errorHandler = useCallback((error, info) => {
+    customErrorHandler();
+
+    if (url) {
+      postData(url, {
+        message: { message: error.message, stack: info.componentStack },
+        level: "error",
+      });
+
+      onError();
+      console.log(typeof error, JSON.stringify(error), info)
+    };
+  }, [url]);
 
   return (
     <ErrorBoundary
       FallbackComponent={ErrorFallback}
-      onError={myErrorHandler}
-      onReset={() => {
-        // reset the state of your app so the error doesn't happen again
-      }}
+      onError={errorHandler}
     >
       {children}
     </ErrorBoundary>

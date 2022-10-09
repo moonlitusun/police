@@ -10,7 +10,7 @@ console.log(ErrorBoundaryWithLogger, '<-- a()');
 export default function ReactPage() {
   const [data, setData] = useState();
   return (
-    <ErrorBoundaryWithLogger>
+    <ErrorBoundaryWithLogger url="http://localhost:6001">
       <div>
         <h1>Web33</h1>
 
