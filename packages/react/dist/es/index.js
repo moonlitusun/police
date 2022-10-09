@@ -2319,7 +2319,6 @@ var myErrorHandler = (error, info) => {
   // E.g. log to an error logging client here
 };
 
-console.log(ErrorBoundary, "<-- ErrorBoundary");
 function ErrorBoundaryWithLogger(props) {
   var {
     children

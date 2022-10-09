@@ -5,7 +5,7 @@ const data = { username: "example" };
 
 function postData(data) {
   fetch("http://localhost:6001/log", {
-    method: "POST", // or 'PUT'
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
@@ -33,8 +33,11 @@ function ErrorFallback(info) {
 }
 
 const myErrorHandler = (error, info) => {
-  postData({ message: { message: error.message, stack: info.componentStack }, level: 'error' });
-  console.log(typeof(error), JSON.stringify(error), info);
+  postData({
+    message: { message: error.message, stack: info.componentStack },
+    level: "error",
+  });
+  console.log(typeof error, JSON.stringify(error), info);
   // Do something with the error
   // E.g. log to an error logging client here
 };
@@ -43,19 +46,14 @@ export function ErrorBoundaryWithLogger(props) {
   const { children } = props;
 
   return (
-    <div>
-      <div>133</div>
-
-      <ErrorBoundary
-        FallbackComponent={ErrorFallback}
-        onError={myErrorHandler}
-        onReset={() => {
-          // reset the state of your app so the error doesn't happen again
-        }}
-      >
-        <div>99</div>
-        {children}
-      </ErrorBoundary>
-    </div>
+    <ErrorBoundary
+      FallbackComponent={ErrorFallback}
+      onError={myErrorHandler}
+      onReset={() => {
+        // reset the state of your app so the error doesn't happen again
+      }}
+    >
+      {children}
+    </ErrorBoundary>
   );
 }
