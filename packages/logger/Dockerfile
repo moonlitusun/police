@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:12.18.1
+FROM dev.hub.dztec.net/lib/node
 ENV NODE_ENV=production
 
 RUN mkdir /www-data
