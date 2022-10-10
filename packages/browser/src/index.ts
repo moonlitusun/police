@@ -8,15 +8,15 @@ export class Logger {
 
   private batchInterval: number;
   private batchTimer: any = null;
-  private batchMessage = [];
+  private batchMessage: any[] = [];
 
   constructor(options: LoggerOptions) {
     this.url = options.url;
     this.batchInterval = options.batchInterval || 10000;
   }
 
-  async postData(data = {}) {
-    const response = await fetch(`${this.url}/log`, {
+  postData(data = {}) {
+    return fetch(`${this.url}/log`, {
       method: "POST",
       mode: "cors",
       headers: {
@@ -25,9 +25,22 @@ export class Logger {
       redirect: "follow",
       referrerPolicy: "no-referrer",
       body: JSON.stringify(data),
-    });
+    })
+    .then((res) => res.json());
+  }
 
-    return response.json();
+  private createBatch() {
+    this.batchTimer = setTimeout(() => {
+      this.postData({ level: 'info', message: this.batchMessage })
+        .then(() => {
+          this.batchMessage = [];
+          this.batchTimer = null;
+        })
+        .catch((err) => {
+          this.createBatch();
+          this.error(`Police Browser Error: ${err.message}`);
+        });
+    }, this.batchInterval);
   }
 
   error(message: any) {
@@ -35,13 +48,8 @@ export class Logger {
   }
 
   info(message: any) {
-    if (this.batchTimer) {
-
-    }
-
-    this.batchTimer = setTimeout(() => {
-      this.postData({ level: 'info', message })
-    });
+    this.batchMessage.push(message);
+    if (!this.batchTimer) this.createBatch();
   }
 
   infoImmediately(message: any) {

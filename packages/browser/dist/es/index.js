@@ -1,39 +1,3 @@
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
-  try {
-    var info = gen[key](arg);
-    var value = info.value;
-  } catch (error) {
-    reject(error);
-    return;
-  }
-
-  if (info.done) {
-    resolve(value);
-  } else {
-    Promise.resolve(value).then(_next, _throw);
-  }
-}
-
-function _asyncToGenerator(fn) {
-  return function () {
-    var self = this,
-        args = arguments;
-    return new Promise(function (resolve, reject) {
-      var gen = fn.apply(self, args);
-
-      function _next(value) {
-        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
-      }
-
-      function _throw(err) {
-        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
-      }
-
-      _next(undefined);
-    });
-  };
-}
-
 function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
@@ -2218,23 +2182,32 @@ class Logger {
   }
 
   postData() {
-    var _arguments = arguments,
-        _this = this;
+    var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    return fetch("".concat(this.url, "/log"), {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      redirect: "follow",
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify(data)
+    }).then(res => res.json());
+  }
 
-    return _asyncToGenerator(function* () {
-      var data = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : {};
-      var response = yield fetch("".concat(_this.url, "/log"), {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        redirect: "follow",
-        referrerPolicy: "no-referrer",
-        body: JSON.stringify(data)
+  createBatch() {
+    this.batchTimer = setTimeout(() => {
+      this.postData({
+        level: 'info',
+        message: this.batchMessage
+      }).then(() => {
+        this.batchMessage = [];
+        this.batchTimer = null;
+      }).catch(err => {
+        this.createBatch();
+        this.error("Police Browser Error: ".concat(err.message));
       });
-      return response.json();
-    })();
+    }, this.batchInterval);
   }
 
   error(message) {
@@ -2245,14 +2218,8 @@ class Logger {
   }
 
   info(message) {
-    if (this.batchTimer) ;
-
-    this.batchTimer = setTimeout(() => {
-      this.postData({
-        level: 'info',
-        message
-      });
-    });
+    this.batchMessage.push(message);
+    if (!this.batchTimer) this.createBatch();
   }
 
   infoImmediately(message) {

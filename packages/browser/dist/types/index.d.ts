@@ -9,6 +9,7 @@ export declare class Logger {
     private batchMessage;
     constructor(options: LoggerOptions);
     postData(data?: {}): Promise<any>;
+    private createBatch;
     error(message: any): Promise<any>;
     info(message: any): void;
     infoImmediately(message: any): Promise<any>;
