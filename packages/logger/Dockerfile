@@ -3,7 +3,6 @@
 FROM dev.hub.dztec.net/lib/node:12.18.1
 ENV NODE_ENV=production
 
-RUN mkdir /www-data
 WORKDIR /www-data
 
 COPY ["src", "./"]
