@@ -1,6 +1,6 @@
 export interface LoggerOptions {
     url: string;
-    batchInterval: number;
+    batchInterval?: number;
 }
 export declare class Logger {
     private url;
