@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:14.19.1-alpine3.15
+FROM dev.hub.dztec.net/lib/node:14.19.1
 ENV NODE_ENV=production
 
 WORKDIR /www-data
