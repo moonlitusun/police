@@ -8,6 +8,6 @@ WORKDIR /www-data
 COPY ["src", "./"]
 COPY ["package.json", "package-lock.json*", "./"]
 
-RUN npm install --production
+RUN "npm install --production"
 
 CMD [ "node", "server.js" ]

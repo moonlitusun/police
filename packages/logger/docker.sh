@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Use jenkins job name as image name
 image_name=$JOB_NAME
