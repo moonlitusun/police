@@ -1,8 +1,9 @@
 import { Button } from "ui";
 import { Logger } from '@dz-web/police-browser';
 
-const logger = new Logger({
-  url: 'http://localhost:6001'
+export const logger = new Logger({
+  url: 'http://localhost:6001',
+  label: 'police-web',
 });
 
 export default function Web() {

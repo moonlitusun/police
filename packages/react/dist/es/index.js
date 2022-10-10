@@ -2333,21 +2333,7 @@ var ErrorBoundary = /*#__PURE__*/function (_React$Component) {
   return ErrorBoundary;
 }(React.Component);
 
-var _excluded = ["children", "url", "onError"];
-
-function postData(url, data) {
-  fetch("".concat(url, "/log"), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  }).then(response => response.json()).then(data => {
-    console.log("Success:", data);
-  }).catch(error => {
-    console.error("Error:", error);
-  });
-}
+var _excluded = ["children", "logger", "onError"];
 
 function ErrorFallback(info) {
   var {
@@ -2364,7 +2350,7 @@ function ErrorFallback(info) {
 function ErrorBoundaryWithLogger(props) {
   var {
     children,
-    url,
+    logger,
     onError = () => undefined
   } = props,
       rest = _objectWithoutProperties(props, _excluded);
@@ -2372,17 +2358,14 @@ function ErrorBoundaryWithLogger(props) {
   var errorHandler = useCallback((error, info) => {
     onError(error, info);
 
-    if (url) {
-      postData(url, {
-        message: {
-          message: error.message,
-          stack: info.componentStack
-        },
-        level: "error"
+    if (logger) {
+      logger.error({
+        message: error.message,
+        stack: info.componentStack
       });
       console.log(typeof error, JSON.stringify(error), info);
     }
-  }, [url]);
+  }, []);
   return (
     /*#__PURE__*/
     // @ts-ignore

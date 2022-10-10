@@ -2171,6 +2171,8 @@ class Logger {
   constructor(options) {
     _defineProperty(this, "url", void 0);
 
+    _defineProperty(this, "label", void 0);
+
     _defineProperty(this, "batchInterval", void 0);
 
     _defineProperty(this, "batchTimer", null);
@@ -2178,6 +2180,7 @@ class Logger {
     _defineProperty(this, "batchMessage", []);
 
     this.url = options.url;
+    this.label = options.label;
     this.batchInterval = options.batchInterval || 10000;
   }
 
@@ -2199,7 +2202,8 @@ class Logger {
     this.batchTimer = setTimeout(() => {
       this.postData({
         level: 'info',
-        message: this.batchMessage
+        message: this.batchMessage,
+        label: this.label
       }).then(() => {
         this.batchMessage = [];
         this.batchTimer = null;
@@ -2213,7 +2217,8 @@ class Logger {
   error(message) {
     return this.postData({
       level: 'error',
-      message
+      message,
+      label: this.label
     });
   }
 
@@ -2225,7 +2230,8 @@ class Logger {
   infoImmediately(message) {
     return this.postData({
       level: 'info',
-      message
+      message,
+      label: this.label
     });
   }
 

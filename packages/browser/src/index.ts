@@ -1,10 +1,12 @@
 export interface LoggerOptions {
   url: string;
+  label: string;
   batchInterval?: number;
 }
 
 export class Logger {
   private url: string;
+  private label: string;
 
   private batchInterval: number;
   private batchTimer: any = null;
@@ -12,6 +14,7 @@ export class Logger {
 
   constructor(options: LoggerOptions) {
     this.url = options.url;
+    this.label = options.label;
     this.batchInterval = options.batchInterval || 10000;
   }
 
@@ -31,7 +34,7 @@ export class Logger {
 
   private createBatch() {
     this.batchTimer = setTimeout(() => {
-      this.postData({ level: 'info', message: this.batchMessage })
+      this.postData({ level: 'info', message: this.batchMessage, label: this.label })
         .then(() => {
           this.batchMessage = [];
           this.batchTimer = null;
@@ -44,7 +47,7 @@ export class Logger {
   }
 
   error(message: any) {
-    return this.postData({ level: 'error', message })
+    return this.postData({ level: 'error', message, label: this.label })
   }
 
   info(message: any) {
@@ -53,6 +56,6 @@ export class Logger {
   }
 
   infoImmediately(message: any) {
-    return this.postData({ level: 'info', message })
+    return this.postData({ level: 'info', message, label: this.label })
   }
 }

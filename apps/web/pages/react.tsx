@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { logger } from './index';
 import { ErrorBoundaryWithLogger } from '@dz-web/police-react';
 
 function Bomb() {
@@ -10,7 +11,7 @@ console.log(ErrorBoundaryWithLogger, '<-- a()');
 export default function ReactPage() {
   const [data, setData] = useState();
   return (
-    <ErrorBoundaryWithLogger url="http://localhost:6001">
+    <ErrorBoundaryWithLogger logger={logger}>
       <div>
         <h1>Web33</h1>
 

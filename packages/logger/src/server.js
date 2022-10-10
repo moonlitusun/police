@@ -41,8 +41,8 @@ const parseMsg = (str = '', message) => {
   return str;
 };
 
-const myFormat = printf(({ level, message, label, timestamp }) => {
-  let str = `${new Date(timestamp).toLocaleString()} [${label}] ${level}:`;
+const myFormat = printf(({ level, message, timestamp, meta }) => {
+  let str = `${new Date(timestamp).toLocaleString()} [${meta.label || 'Police'}] ${level}:`;
 
   str = parseMsg(str, message);
   return str;
@@ -79,14 +79,14 @@ transportError.on('rotate', function (oldFilename, newFilename) {
 });
 
 const logger = createLogger({
-  format: combine(label({ label: 'Police' }), timestamp(), myFormat),
+  format: combine(timestamp(), myFormat),
   transports: [transportInfo, transportError],
 });
 
 router
   .post('/log', (ctx, next) => {
     console.log(ctx.request.body);
-    const { message, level } = ctx.request.body;
+    const { message, level, label } = ctx.request.body;
 
     if (!message) {
       ctx.body = { message: '缺少message', status: -1 };
@@ -101,6 +101,7 @@ router
     logger.log({
       level,
       message,
+      meta: { label },
     });
 
     ctx.body = { message: 'ok', status: 0 };

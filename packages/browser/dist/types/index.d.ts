@@ -1,9 +1,11 @@
 export interface LoggerOptions {
     url: string;
+    label: string;
     batchInterval?: number;
 }
 export declare class Logger {
     private url;
+    private label;
     private batchInterval;
     private batchTimer;
     private batchMessage;

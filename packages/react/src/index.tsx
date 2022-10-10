@@ -32,27 +32,24 @@ function ErrorFallback(info: FallbackProps) {
 
 export interface IErrorBoundaryProps extends ErrorBoundaryPropsWithFallback {
   children: React.ReactElement;
-  url?: string;
+  logger: any;
   onError?: (error: Error, info: {
     componentStack: string;
   }) => void;
 }
 
 export function ErrorBoundaryWithLogger(props: IErrorBoundaryProps) {
-  const { children, url, onError = () => undefined, ...rest } = props;
+  const { children, logger, onError = () => undefined, ...rest } = props;
 
   const errorHandler = useCallback<typeof onError>((error, info) => {
     onError(error, info);
 
-    if (url) {
-      postData(url, {
-        message: { message: error.message, stack: info.componentStack },
-        level: "error",
-      });
+    if (logger) {
+      logger.error({ message: error.message, stack: info.componentStack });
 
       console.log(typeof error, JSON.stringify(error), info);
     };
-  }, [url]);
+  }, []);
 
   return (
     // @ts-ignore
