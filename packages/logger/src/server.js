@@ -13,21 +13,44 @@ var router = new Router();
 app.use(bodyParser());
 app.use(cors());
 
-const myFormat = printf(({ level, message, label, timestamp }) => {
-  let str = `${timestamp} [${label}] ${level}:`;
+const parseMsg = (str = '', message) => {
+  if (typeof message === 'string') {
+    str += message;
+    return str;
+  }
+
+  if (Array.isArray(message)) {
+    const len = message.length - 1;
+    message.forEach(
+      (item, index) =>
+        (str = `${parseMsg(str, item)}${
+          index !== len
+            ? `
+    =========`
+            : ''
+        }`)
+    );
+    return str;
+  }
 
   for (let key in message) {
     str += `
-    ${key}: ${message[key]}
-    `
+    ${key}: ${message[key]}`;
   }
 
+  return str;
+};
+
+const myFormat = printf(({ level, message, label, timestamp }) => {
+  let str = `${new Date(timestamp).toLocaleString()} [${label}] ${level}:`;
+
+  str = parseMsg(str, message);
   return str;
 });
 
 var transportInfo = new winston.transports.DailyRotateFile({
   level: 'info',
-  filename: '../logs/info/%DATE%.log',
+  filename: './logs/info/%DATE%.log',
   datePattern: 'YYYY-MM-DD-HH',
   zippedArchive: true,
   maxSize: '20m',
@@ -37,7 +60,7 @@ var transportInfo = new winston.transports.DailyRotateFile({
 
 var transportError = new winston.transports.DailyRotateFile({
   level: 'error',
-  filename: '../logs/error/%DATE%.log',
+  filename: './logs/error/%DATE%.log',
   datePattern: 'YYYY-MM-DD-HH',
   zippedArchive: true,
   maxSize: '20m',
@@ -65,7 +88,6 @@ router
     console.log(ctx.request.body);
     const { message, level } = ctx.request.body;
 
-    console.log(`${level} ${JSON.stringify(message)}`);
     if (!message) {
       ctx.body = { message: '缺少message', status: -1 };
       return;
@@ -78,7 +100,7 @@ router
 
     logger.log({
       level,
-      message: message,
+      message,
     });
 
     ctx.body = { message: 'ok', status: 0 };

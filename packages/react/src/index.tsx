@@ -1,7 +1,7 @@
-import { useCallback } from 'react';
-import { ErrorBoundary } from "react-error-boundary";
+import React, { useCallback } from 'react';
+import { ErrorBoundary, ErrorBoundaryPropsWithFallback, FallbackProps } from "react-error-boundary";
 
-function postData(url, data) {
+function postData(url: string, data: any) {
   fetch(`${url}/log`, {
     method: "POST",
     headers: {
@@ -18,7 +18,7 @@ function postData(url, data) {
     });
 }
 
-function ErrorFallback(info) {
+function ErrorFallback(info: FallbackProps) {
   const { error, resetErrorBoundary } = info;
 
   return (
@@ -30,11 +30,19 @@ function ErrorFallback(info) {
   );
 }
 
-export function ErrorBoundaryWithLogger(props) {
-  const { children, url, onError = () => undefined } = props;
+export interface IErrorBoundaryProps extends ErrorBoundaryPropsWithFallback {
+  children: React.ReactElement;
+  url?: string;
+  onError?: (error: Error, info: {
+    componentStack: string;
+  }) => void;
+}
 
-  const errorHandler = useCallback((error, info) => {
-    customErrorHandler();
+export function ErrorBoundaryWithLogger(props: IErrorBoundaryProps) {
+  const { children, url, onError = () => undefined, ...rest } = props;
+
+  const errorHandler = useCallback<typeof onError>((error, info) => {
+    onError(error, info);
 
     if (url) {
       postData(url, {
@@ -42,14 +50,15 @@ export function ErrorBoundaryWithLogger(props) {
         level: "error",
       });
 
-      onError();
-      console.log(typeof error, JSON.stringify(error), info)
+      console.log(typeof error, JSON.stringify(error), info);
     };
   }, [url]);
 
   return (
+    // @ts-ignore
     <ErrorBoundary
       FallbackComponent={ErrorFallback}
+      {...rest}
       onError={errorHandler}
     >
       {children}

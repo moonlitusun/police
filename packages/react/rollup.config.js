@@ -7,7 +7,7 @@ import babel from '@rollup/plugin-babel';
 const { NODE_ENV } = process.env;
 
 export default defineConfig({
-  input: 'src/index.jsx',
+  input: 'src/index.tsx',
   output: [
     // {
     //   file: 'dist/index.js',

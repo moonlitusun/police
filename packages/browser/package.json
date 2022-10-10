@@ -8,7 +8,7 @@
   "type": "module",
   "types": "dist/types",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon -e ts --watch src/ --exec \"npm run build && npm run types\"",
+    "dev": "NODE_ENV=development nodemon -e ts --watch src/ --exec npm run build && npm run types",
     "build": "rimraf dist && cross-env NODE_ENV=production rollup -c && tsc",
     "types": "tsc"
   },
@@ -44,7 +44,6 @@
     "typescript": "^4.6.4"
   },
   "dependencies": {
-    "@dz-web/police-react": "*",
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {

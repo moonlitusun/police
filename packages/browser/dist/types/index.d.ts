@@ -1,12 +1,16 @@
-interface LoggerOptions {
+export interface LoggerOptions {
     url: string;
+    batchInterval: number;
 }
 export declare class Logger {
     private url;
+    private batchInterval;
+    private batchTimer;
+    private batchMessage;
     constructor(options: LoggerOptions);
     postData(data?: {}): Promise<any>;
-    error(message: any): void;
+    error(message: any): Promise<any>;
     info(message: any): void;
+    infoImmediately(message: any): Promise<any>;
 }
-export {};
 //# sourceMappingURL=index.d.ts.map

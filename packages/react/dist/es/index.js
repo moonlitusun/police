@@ -1,5 +1,58 @@
 import * as React from 'react';
-import React__default from 'react';
+import React__default, { useCallback } from 'react';
+
+function _extends() {
+  _extends = Object.assign ? Object.assign.bind() : function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+  return _extends.apply(this, arguments);
+}
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+
+  var target = _objectWithoutPropertiesLoose(source, excluded);
+
+  var key, i;
+
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+
+  return target;
+}
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -2280,10 +2333,11 @@ var ErrorBoundary = /*#__PURE__*/function (_React$Component) {
   return ErrorBoundary;
 }(React.Component);
 
-function postData(data) {
-  fetch("http://localhost:6001/log", {
+var _excluded = ["children", "url", "onError"];
+
+function postData(url, data) {
+  fetch("".concat(url, "/log"), {
     method: "POST",
-    // or 'PUT'
     headers: {
       "Content-Type": "application/json"
     },
@@ -2307,28 +2361,37 @@ function ErrorFallback(info) {
   }, "Try again"));
 }
 
-var myErrorHandler = (error, info) => {
-  postData({
-    message: {
-      message: error.message,
-      stack: info.componentStack
-    },
-    level: 'error'
-  });
-  console.log(typeof error, JSON.stringify(error), info); // Do something with the error
-  // E.g. log to an error logging client here
-};
-
 function ErrorBoundaryWithLogger(props) {
   var {
-    children
-  } = props;
-  return /*#__PURE__*/React__default.createElement("div", null, /*#__PURE__*/React__default.createElement("div", null, "133"), /*#__PURE__*/React__default.createElement(ErrorBoundary, {
-    FallbackComponent: ErrorFallback,
-    onError: myErrorHandler,
-    onReset: () => {// reset the state of your app so the error doesn't happen again
+    children,
+    url,
+    onError = () => undefined
+  } = props,
+      rest = _objectWithoutProperties(props, _excluded);
+
+  var errorHandler = useCallback((error, info) => {
+    onError(error, info);
+
+    if (url) {
+      postData(url, {
+        message: {
+          message: error.message,
+          stack: info.componentStack
+        },
+        level: "error"
+      });
+      console.log(typeof error, JSON.stringify(error), info);
     }
-  }, /*#__PURE__*/React__default.createElement("div", null, "99"), children));
+  }, [url]);
+  return (
+    /*#__PURE__*/
+    // @ts-ignore
+    React__default.createElement(ErrorBoundary, _extends({
+      FallbackComponent: ErrorFallback
+    }, rest, {
+      onError: errorHandler
+    }), children)
+  );
 }
 
 export { ErrorBoundaryWithLogger };

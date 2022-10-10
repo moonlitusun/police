@@ -2207,7 +2207,14 @@ class Logger {
   constructor(options) {
     _defineProperty(this, "url", void 0);
 
+    _defineProperty(this, "batchInterval", void 0);
+
+    _defineProperty(this, "batchTimer", null);
+
+    _defineProperty(this, "batchMessage", []);
+
     this.url = options.url;
+    this.batchInterval = options.batchInterval || 10000;
   }
 
   postData() {
@@ -2219,8 +2226,6 @@ class Logger {
       var response = yield fetch("".concat(_this.url, "/log"), {
         method: "POST",
         mode: "cors",
-        // cache: "no-cache",
-        // credentials: "same-origin",
         headers: {
           "Content-Type": "application/json"
         },
@@ -2233,20 +2238,27 @@ class Logger {
   }
 
   error(message) {
-    this.postData({
+    return this.postData({
       level: 'error',
       message
     });
   }
 
   info(message) {
-    this.postData({
+    if (this.batchTimer) ;
+
+    this.batchTimer = setTimeout(() => {
+      this.postData({
+        level: 'info',
+        message
+      });
+    });
+  }
+
+  infoImmediately(message) {
+    return this.postData({
       level: 'info',
       message
-    }).then(res => {
-      console.log(res, '<-- res');
-    }).catch(err => {
-      console.log(err, '<-- error');
     });
   }
 
