@@ -3,6 +3,7 @@ export interface ErrorData {
     type: string;
     message: string;
     stack: any;
+    reason: string | undefined;
 }
 export declare type Callback = (error: ErrorData) => void;
 export declare function browserErrorHandle(logger: Logger, error: any, callback?: Callback): void;

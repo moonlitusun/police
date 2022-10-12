@@ -5,6 +5,7 @@ export interface ErrorData {
   type: string;
   message: string;
   stack: any;
+  reason: string | undefined;
 }
 
 export type Callback = (error: ErrorData) => void;
@@ -14,6 +15,8 @@ export function browserErrorHandle(logger: Logger, error: any, callback: Callbac
 
   let { type, reason = {}, error: errorStack } = error;
   const { message, stack } = errorStack || reason;
+
+  let reasonString = (message && stack) ? undefined : JSON.stringify(reason);
   
   console.log('[Police]', error, '<-- ');
   if (error instanceof Error) {
@@ -21,12 +24,14 @@ export function browserErrorHandle(logger: Logger, error: any, callback: Callbac
       type,
       message,
       stack,
+      reason: reasonString,
     };
   } else {
     err_data = {
       type: type || "other",
       message,
       stack,
+      reason: reasonString,
     };
   }
 

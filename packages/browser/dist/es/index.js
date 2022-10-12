@@ -2284,19 +2284,22 @@ function browserErrorHandle(logger, error) {
     message,
     stack
   } = errorStack || reason;
+  var reasonString = message && stack ? undefined : JSON.stringify(reason);
   console.log('[Police]', error, '<-- ');
 
   if (error instanceof Error) {
     err_data = {
       type,
       message,
-      stack
+      stack,
+      reason: reasonString
     };
   } else {
     err_data = {
       type: type || "other",
       message,
-      stack
+      stack,
+      reason: reasonString
     };
   }
 
