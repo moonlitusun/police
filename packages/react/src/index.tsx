@@ -1,23 +1,6 @@
 import React, { useCallback } from 'react';
 import { ErrorBoundary, ErrorBoundaryPropsWithFallback, FallbackProps } from "react-error-boundary";
 
-function postData(url: string, data: any) {
-  fetch(`${url}/log`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Success:", data);
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-}
-
 function ErrorFallback(info: FallbackProps) {
   const { error, resetErrorBoundary } = info;
 

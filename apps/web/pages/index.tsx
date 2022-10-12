@@ -1,5 +1,6 @@
 import { Button } from "ui";
-import { Logger } from '@dz-web/police-browser';
+import { Logger, watchGlobalError } from '@dz-web/police-browser';
+import { useEffect } from 'react';
 
 export const logger = new Logger({
   url: 'http://localhost:6001',
@@ -8,12 +9,17 @@ export const logger = new Logger({
 
 export default function Web() {
   function log() {
-    logger.info({ message: Math.random() })
+    console.log(caches.a.cc);
+    // logger.info({ message: Math.random() })
   }
 
   function error() {
-    logger.error([{ message: Math.random(), from: 'roc' }])
+    logger.error({ message: Math.random(), from: 'roc' })
   }
+
+  useEffect(() => {
+    watchGlobalError(logger);
+  }, []);
 
   return (
     <div>

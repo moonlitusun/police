@@ -1,3 +1,29 @@
+function ownKeys$2(object, enumerableOnly) {
+  var keys = Object.keys(object);
+
+  if (Object.getOwnPropertySymbols) {
+    var symbols = Object.getOwnPropertySymbols(object);
+    enumerableOnly && (symbols = symbols.filter(function (sym) {
+      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+    })), keys.push.apply(keys, symbols);
+  }
+
+  return keys;
+}
+
+function _objectSpread2(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = null != arguments[i] ? arguments[i] : {};
+    i % 2 ? ownKeys$2(Object(source), !0).forEach(function (key) {
+      _defineProperty(target, key, source[key]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys$2(Object(source)).forEach(function (key) {
+      Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+    });
+  }
+
+  return target;
+}
+
 function _defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
@@ -2179,8 +2205,11 @@ class Logger {
 
     _defineProperty(this, "batchMessage", []);
 
+    _defineProperty(this, "userInfo", void 0);
+
     this.url = options.url;
     this.label = options.label;
+    this.userInfo = options.userInfo;
     this.batchInterval = options.batchInterval || 10000;
   }
 
@@ -2200,11 +2229,10 @@ class Logger {
 
   createBatch() {
     this.batchTimer = setTimeout(() => {
-      this.postData({
+      this.postData(_objectSpread2({
         level: 'info',
-        message: this.batchMessage,
-        label: this.label
-      }).then(() => {
+        message: this.batchMessage
+      }, this.createMetaInfo())).then(() => {
         this.batchMessage = [];
         this.batchTimer = null;
       }).catch(err => {
@@ -2214,12 +2242,20 @@ class Logger {
     }, this.batchInterval);
   }
 
+  createMetaInfo() {
+    var userInfo = typeof this.userInfo === 'function' ? this.userInfo() : this.userInfo;
+    return {
+      label: this.label,
+      userAgent: navigator.userAgent,
+      userInfo
+    };
+  }
+
   error(message) {
-    return this.postData({
+    return this.postData(_objectSpread2({
       level: 'error',
-      message,
-      label: this.label
-    });
+      message
+    }, this.createMetaInfo()));
   }
 
   info(message) {
@@ -2228,13 +2264,55 @@ class Logger {
   }
 
   infoImmediately(message) {
-    return this.postData({
+    return this.postData(_objectSpread2({
       level: 'info',
-      message,
-      label: this.label
-    });
+      message
+    }, this.createMetaInfo()));
   }
 
 }
 
-export { Logger };
+function browserErrorHandle(logger, error) {
+  var callback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : () => undefined;
+  var err_data = null;
+  var {
+    type,
+    reason = {},
+    error: errorStack
+  } = error;
+  var {
+    message,
+    stack
+  } = errorStack || reason;
+  console.log('[Police]', error, '<-- ');
+
+  if (error instanceof Error) {
+    err_data = {
+      type,
+      message,
+      stack
+    };
+  } else {
+    err_data = {
+      type: type || "other",
+      message,
+      stack
+    };
+  }
+
+  if (err_data) {
+    callback(err_data);
+    logger.error(err_data);
+  }
+}
+function watchGlobalError(logger, callback) {
+  window.addEventListener("error", error => {
+    browserErrorHandle(logger, error, callback);
+  }, true);
+  window.addEventListener("unhandledrejection", error => {
+    browserErrorHandle(logger, error, callback);
+    error.preventDefault();
+  });
+}
+
+export { Logger, browserErrorHandle, watchGlobalError };

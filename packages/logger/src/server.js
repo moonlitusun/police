@@ -6,7 +6,7 @@ import cors from '@koa/cors';
 import 'winston-daily-rotate-file';
 
 const { format, createLogger } = winston;
-const { combine, timestamp, label, printf } = format;
+const { combine, timestamp, printf } = format;
 const app = new Koa();
 
 var router = new Router();
@@ -42,7 +42,14 @@ const parseMsg = (str = '', message) => {
 };
 
 const myFormat = printf(({ level, message, timestamp, meta }) => {
-  let str = `${new Date(timestamp).toLocaleString()} [${meta.label || 'Police'}] ${level}:`;
+  let metaStr = '';
+  for (let key in meta) {
+    metaStr += `${key}: ${meta[key]}
+  `;
+  }
+
+  let str = `${new Date(timestamp).toLocaleString()} [${meta.label || 'Police'}] ${level}
+  ${metaStr}content: `;
 
   str = parseMsg(str, message);
   return str;
@@ -69,12 +76,10 @@ var transportError = new winston.transports.DailyRotateFile({
 });
 
 transportInfo.on('rotate', function (oldFilename, newFilename) {
-  // do something fun
   console.log(oldFilename, newFilename, '<-- transportInfo newFilename');
 });
 
 transportError.on('rotate', function (oldFilename, newFilename) {
-  // do something fun
   console.log(oldFilename, newFilename, '<-- transportError newFilename');
 });
 
@@ -85,8 +90,7 @@ const logger = createLogger({
 
 router
   .post('/log', (ctx, next) => {
-    console.log(ctx.request.body);
-    const { message, level, label } = ctx.request.body;
+    const { message, level, ...meta } = ctx.request.body;
 
     if (!message) {
       ctx.body = { message: '缺少message', status: -1 };
@@ -98,11 +102,14 @@ router
       return;
     }
 
-    logger.log({
+    const data = {
       level,
       message,
-      meta: { label },
-    });
+      meta: { ip: ctx.request.ip, ...meta },
+    };
+
+    console.log(new Date().toLocaleString(), ':', data);
+    logger.log(data);
 
     ctx.body = { message: 'ok', status: 0 };
   })
