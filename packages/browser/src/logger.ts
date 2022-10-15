@@ -6,7 +6,7 @@ export interface LoggerOptions {
 }
 
 export class Logger {
-  private url: string;
+  public url: string;
   private label: string;
 
   private batchInterval: number;
@@ -56,15 +56,18 @@ export class Logger {
   }
 
   error(message: any) {
+    if (!this.url) return;
     return this.postData({ level: 'error', message, ...this.createMetaInfo() })
   }
 
   info(message: any) {
+    if (!this.url) return;
     this.batchMessage.push(message);
     if (!this.batchTimer) this.createBatch();
   }
 
   infoImmediately(message: any) {
+    if (!this.url) return;
     return this.postData({ level: 'info', message, ...this.createMetaInfo() })
   }
 }
