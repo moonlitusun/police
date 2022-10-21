@@ -41,7 +41,7 @@ export function browserErrorHandle(logger: Logger, error: any, callback: Callbac
   };
 }
 
-export function watchGlobalError(logger: Logger, callback: Callback) {
+export function watchGlobalError(logger: Logger, callback?: Callback) {
   window.addEventListener(
     "error",
     (error) => {

@@ -5,7 +5,7 @@ export interface LoggerOptions {
     userInfo: () => void | string;
 }
 export declare class Logger {
-    private url;
+    url: string;
     private label;
     private batchInterval;
     private batchTimer;
@@ -15,8 +15,8 @@ export declare class Logger {
     postData(data?: {}): Promise<any>;
     private createBatch;
     private createMetaInfo;
-    error(message: any): Promise<any>;
+    error(message: any): Promise<any> | undefined;
     info(message: any): void;
-    infoImmediately(message: any): Promise<any>;
+    infoImmediately(message: any): Promise<any> | undefined;
 }
 //# sourceMappingURL=logger.d.ts.map

@@ -7,5 +7,5 @@ export interface ErrorData {
 }
 export declare type Callback = (error: ErrorData) => void;
 export declare function browserErrorHandle(logger: Logger, error: any, callback?: Callback): void;
-export declare function watchGlobalError(logger: Logger, callback: Callback): void;
+export declare function watchGlobalError(logger: Logger, callback?: Callback): void;
 //# sourceMappingURL=browser.d.ts.map

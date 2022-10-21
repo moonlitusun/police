@@ -2224,7 +2224,7 @@ class Logger {
       redirect: "follow",
       referrerPolicy: "no-referrer",
       body: JSON.stringify(data)
-    }).then(res => res.json());
+    }).then(res => res.json()).catch(err => console.log(err, 'Logger Error'));
   }
 
   createBatch() {
@@ -2252,6 +2252,7 @@ class Logger {
   }
 
   error(message) {
+    if (!this.url) return;
     return this.postData(_objectSpread2({
       level: 'error',
       message
@@ -2259,11 +2260,13 @@ class Logger {
   }
 
   info(message) {
+    if (!this.url) return;
     this.batchMessage.push(message);
     if (!this.batchTimer) this.createBatch();
   }
 
   infoImmediately(message) {
+    if (!this.url) return;
     return this.postData(_objectSpread2({
       level: 'info',
       message

@@ -32,7 +32,8 @@ export class Logger {
       referrerPolicy: "no-referrer",
       body: JSON.stringify(data),
     })
-    .then((res) => res.json());
+    .then((res) => res.json())
+    .catch((err) => console.log(err, 'Logger Error'));
   }
 
   private createBatch() {
