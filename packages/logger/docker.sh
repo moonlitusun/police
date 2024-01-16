@@ -1,12 +1,15 @@
-#!/bin/ash
+#!/bin/bash
 
 # Use jenkins job name as image name
-image_name=$JOB_NAME
+image_name="${JOB_NAME/\//@}"
+image_name=$(echo "$image_name" | sed 's/\//-/g')
+image_name="${image_name/\@//}"
 
-echo $BUILD_VERSION
+echo "BUILD_VERSION = $BUILD_VERSION"
+echo "image_name = $image_name"
 version="${BUILD_VERSION}"
 
-registry_url="dev.hub.dztec.net"
+registry_url="develop.dztec.net:50243"
 
 full_name="${registry_url}/${image_name}:${version}"
 latest_name="${registry_url}/${image_name}:latest"
