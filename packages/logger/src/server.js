@@ -5,55 +5,15 @@ import winston from 'winston';
 import cors from '@koa/cors';
 import 'winston-daily-rotate-file';
 
+import { myFormat } from './helper.js';
+
 const { format, createLogger } = winston;
-const { combine, timestamp, printf } = format;
+const { combine, timestamp } = format;
 const app = new Koa();
 
 var router = new Router();
 app.use(bodyParser());
 app.use(cors());
-
-const parseMsg = (str = '', message) => {
-  if (typeof message === 'string') {
-    str += message;
-    return str;
-  }
-
-  if (Array.isArray(message)) {
-    const len = message.length - 1;
-    message.forEach(
-      (item, index) =>
-        (str = `${parseMsg(str, item)}${
-          index !== len
-            ? `
-    =========`
-            : ''
-        }`)
-    );
-    return str;
-  }
-
-  for (let key in message) {
-    str += `
-    ${key}: ${message[key]}`;
-  }
-
-  return str;
-};
-
-const myFormat = printf(({ level, message, timestamp, meta }) => {
-  let metaStr = '';
-  for (let key in meta) {
-    metaStr += `${key}: ${meta[key]}
-  `;
-  }
-
-  let str = `${new Date(timestamp).toLocaleString()} [${meta.label || 'Police'}] ${level}
-  ${metaStr}content: `;
-
-  str = parseMsg(str, message);
-  return str;
-});
 
 var transportInfo = new winston.transports.DailyRotateFile({
   level: 'info',
@@ -147,4 +107,6 @@ router
 
 app.use(router.routes()).use(router.allowedMethods());
 
-app.listen(process.env.port || 6001);
+app.listen(process.env.port || 6001, () => {
+  console.log(`Server is running on port ${process.env.port || 6001}`);
+});
