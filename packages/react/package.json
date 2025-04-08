@@ -4,13 +4,12 @@
   "description": "",
   "sideEffects": false,
   "main": "dist/index.js",
-  "module": "dist/es/index.js",
-  "type": "module",
-  "types": "dist/types",
+  "types": "dist/types/index.d.ts",
+  "module": "dist/index.mjs",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon -e ts --watch src/ --exec 'npm run build && npm run types'",
-    "build": "rimraf dist && cross-env NODE_ENV=production rollup -c && tsc",
-    "types": "tsc"
+    "build": "tsup --minify --dts --format esm,cjs",
+    "dev": "tsup --watch --dts --format esm --onSuccess 'tsc --emitDeclarationOnly --declaration'",
+    "prepublishOnly": "npm run build"
   },
   "files": [
     "dist"
@@ -19,27 +18,8 @@
   "author": "Roc",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.17.10",
-    "@babel/plugin-proposal-class-properties": "^7.16.7",
-    "@babel/plugin-proposal-object-rest-spread": "^7.17.3",
-    "@babel/preset-env": "^7.17.10",
-    "@babel/preset-typescript": "^7.16.7",
-    "@rollup/plugin-babel": "^5.3.1",
-    "@rollup/plugin-commonjs": "^22.0.0",
-    "@rollup/plugin-node-resolve": "^13.3.0",
-    "@rollup/plugin-replace": "^4.0.0",
     "@types/react": "^18.0.14",
-    "@typescript-eslint/eslint-plugin": "^5.21.0",
-    "@typescript-eslint/parser": "^5.21.0",
-    "core-js": "^3.22.3",
-    "cross-env": "^7.0.3",
-    "eslint": "^8.15.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-plugin-import": "^2.26.0",
-    "nodemon": "^2.0.16",
-    "rimraf": "^3.0.2",
-    "rollup": "^2.72.1",
-    "typescript": "^4.6.4"
+    "typescript": "^4.9.5"
   },
   "dependencies": {
     "react-error-boundary": "^3.1.4"
