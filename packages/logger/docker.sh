@@ -1,31 +1,19 @@
 #!/bin/bash
 
-# Use jenkins job name as image name
 image_name="${JOB_NAME/\//@}"
 image_name=$(echo "$image_name" | sed 's/\//-/g')
+image_name=$(echo "$image_name" | sed 's/web-teams/web_teams/g')
 image_name="${image_name/\@//}"
+image_name=$(echo "$image_name" | tr '[:upper:]' '[:lower:]')
+_container_port=80
 
-echo "BUILD_VERSION = $BUILD_VERSION"
-echo "image_name = $image_name"
-version="${BUILD_VERSION}"
+if [ "$container_port" ]; then
+  _container_port=$container_port
+fi
 
-registry_url="develop.dztec.net:50243"
+echo "modified_JOB_NAME=${image_name}"
 
-full_name="${registry_url}/${image_name}:${version}"
-latest_name="${registry_url}/${image_name}:latest"
-
-echo "---------------------"
-echo "start to build images"
-docker build . -t $full_name
-docker push $full_name
-docker tag $full_name $latest_name
-docker push $latest_name
-
-echo "---------------------"
-echo "start clean images"
-docker rmi $full_name
-docker rmi $latest_name
-
-echo "---------------------"
-echo "build and push docker image success!"
-
+docker pull "develop.dztec.net:50243/$image_name"
+C_NAME=${image_name##*/}
+docker rm -f "$C_NAME"
+docker run --restart=always --name "$C_NAME" -p "$deploy_port:$_container_port" -d "develop.dztec.net:50243/$image_name"
