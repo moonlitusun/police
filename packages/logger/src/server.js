@@ -9,6 +9,8 @@ import { myFormat } from './helper.js';
 
 const { format, createLogger } = winston;
 const { combine, timestamp } = format;
+const host = process.env.HOST || '0.0.0.0';
+const port = process.env.PORT || 6001;
 const app = new Koa();
 
 var router = new Router();
@@ -107,6 +109,6 @@ router
 
 app.use(router.routes()).use(router.allowedMethods());
 
-app.listen(process.env.port || 6001, () => {
-  console.log(`Server is running on port ${process.env.port || 6001}`);
+app.listen(port, host, () => {
+  console.log(`Server is running on port ${port}`);
 });

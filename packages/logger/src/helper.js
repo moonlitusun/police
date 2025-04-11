@@ -1,4 +1,5 @@
 import winston from 'winston';
+
 const { format } = winston;
 const { printf } = format;
 
@@ -34,5 +35,6 @@ export const myFormat = printf(({ level, message, timestamp, meta }) => {
   let str = `${new Date(timestamp).toLocaleString()} [${meta.label || 'Police'}] ${level}:`;
 
   str = parseMsg(str, message);
-  return str + `\n   extraInfo: ${JSON.stringify(meta.extraInfo)}`;
+  delete meta.label;
+  return str + `\n   meta: ${JSON.stringify(meta)}`;
 });
