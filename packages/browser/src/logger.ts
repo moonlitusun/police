@@ -32,13 +32,17 @@ export class Logger {
       referrerPolicy: "no-referrer",
       body: JSON.stringify(data),
     })
-    .then((res) => res.json())
-    .catch((err) => console.log(err, 'Logger Error'));
+      .then((res) => res.json())
+      .catch((err) => console.log(err, "Logger Error"));
   }
 
   private createBatch() {
     this.batchTimer = setTimeout(() => {
-      this.postData({ level: 'info', message: this.batchMessage, ...this.createMetaInfo() })
+      this.postData({
+        level: "info",
+        message: this.batchMessage,
+        ...this.createMetaInfo(),
+      })
         .then(() => {
           this.batchMessage = [];
           this.batchTimer = null;
@@ -51,14 +55,20 @@ export class Logger {
   }
 
   private createMetaInfo() {
-    const userInfo = typeof this.userInfo === 'function' ? this.userInfo() : this.userInfo;
+    const userInfo =
+      typeof this.userInfo === "function" ? this.userInfo() : this.userInfo;
 
-    return { label: this.label, userAgent: navigator.userAgent, userInfo };
+    return {
+      label: this.label,
+      userAgent: navigator.userAgent,
+      url: window.location.href,
+      userInfo,
+    };
   }
 
   error(message: any) {
     if (!this.url) return;
-    return this.postData({ level: 'error', message, ...this.createMetaInfo() })
+    return this.postData({ level: "error", message, ...this.createMetaInfo() });
   }
 
   info(message: any) {
@@ -69,6 +79,6 @@ export class Logger {
 
   infoImmediately(message: any) {
     if (!this.url) return;
-    return this.postData({ level: 'info', message, ...this.createMetaInfo() })
+    return this.postData({ level: "info", message, ...this.createMetaInfo() });
   }
 }

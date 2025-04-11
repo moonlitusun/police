@@ -8,7 +8,7 @@ import 'winston-daily-rotate-file';
 import { myFormat } from './helper.js';
 
 const { format, createLogger } = winston;
-const { combine, timestamp } = format;
+const { combine, timestamp, json } = format;
 const host = process.env.HOST || '0.0.0.0';
 const port = process.env.PORT || 6001;
 const app = new Koa();
