@@ -20,7 +20,7 @@ app.use(cors());
 var transportInfo = new winston.transports.DailyRotateFile({
   level: 'info',
   filename: './logs/info/%DATE%.log',
-  datePattern: 'YYYY-MM-DD-HH',
+  datePattern: 'YYYY-MM-DD',
   zippedArchive: true,
   maxSize: '20m',
   maxFiles: '14d',
@@ -30,7 +30,7 @@ var transportInfo = new winston.transports.DailyRotateFile({
 var transportError = new winston.transports.DailyRotateFile({
   level: 'error',
   filename: './logs/error/%DATE%.log',
-  datePattern: 'YYYY-MM-DD-HH',
+  datePattern: 'YYYY-MM-DD',
   zippedArchive: true,
   maxSize: '20m',
   maxFiles: '14d',
