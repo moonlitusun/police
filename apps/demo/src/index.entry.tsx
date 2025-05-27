@@ -1,15 +1,10 @@
-import { Logger, watchGlobalError } from '@dz-web/police-browser';
+import { watchGlobalError } from '@dz-web/police-browser';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 
 import App from './app';
 import './index.css';
-
-export const logger = new Logger({
-  url: 'http://172.16.11.89:6001',
-  label: 'test',
-  userInfo: () => 'mobile: 张三',
-});
+import { logger } from './logger';
 
 watchGlobalError(logger);
 

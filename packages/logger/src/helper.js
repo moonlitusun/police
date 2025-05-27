@@ -1,10 +1,10 @@
-import winston from 'winston';
+import winston from "winston";
 
 const { format } = winston;
 const { printf } = format;
 
-const parseMsg = (str = '', message) => {
-  if (typeof message === 'string') {
+export const parseMsg = (str = "", message) => {
+  if (typeof message === "string") {
     str += message;
     return str;
   }
@@ -17,22 +17,22 @@ const parseMsg = (str = '', message) => {
           index !== len
             ? `
     =========`
-            : ''
-        }`)
+            : ""
+        }`),
     );
     return str;
   }
 
   for (let key in message) {
     str += `
-    ${key}: ${message[key]}`;
+    ${key}: ${JSON.stringify(message[key])}`;
   }
 
   return str;
 };
 
 export const myFormat = printf(({ level, message, timestamp, meta }) => {
-  let str = `${new Date(timestamp).toLocaleString()} [${meta.label || 'Police'}] ${level}:`;
+  let str = `${new Date(timestamp).toLocaleString()} [${meta.label || "Police"}] ${level}:`;
 
   str = parseMsg(str, message);
   delete meta.label;
